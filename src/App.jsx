@@ -69,8 +69,8 @@ const App = () => {
             </div>
           )
         } */}
-      </div>
       <Outlet />
+      </div>
 
       <Footer />
     </>
