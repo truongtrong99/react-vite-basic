@@ -88,6 +88,7 @@ const columns = [
             setIsDetailOpen={setIsDetailOpen}
             dataDetail={dataDetail}
             setDataDetail={setDataDetail}
+            loadUser={loadUser}
          />
         
        </>
