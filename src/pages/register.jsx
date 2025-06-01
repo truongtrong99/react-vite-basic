@@ -1,9 +1,8 @@
-import { Button, Col, Form, Input, notification, Row } from "antd";
+import { Button, Col, Divider, Form, Input, notification, Row } from "antd";
 import { registerUserAPI } from "../services/api.service";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-
-const RegisterPage = () =>{
+const RegisterPage = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate();
 
@@ -14,7 +13,7 @@ const RegisterPage = () =>{
                 message: 'Registration Successful',
                 description: 'You have successfully registered!',
             });
-            navigate('/login'); // Redirect to login page after successful registration
+            navigate('/login');
         } else {
             notification.error({
                 message: 'Registration Failed',
@@ -22,15 +21,16 @@ const RegisterPage = () =>{
             });
         }
     }
+
     return (
         <>
             <Form
                 form={form}
                 layout="vertical"
                 onFinish={onFinish}
-                style={{margin: '10px'}}
-                // onFinishFailed={onFinishFailed}
+                style={{ margin: '30px' }}
             >
+                <h3 style={{ textAlign: 'center' }}>Register</h3>
                 <Row justify={"center"}>
                     <Col xs={24} md={8}>
                         <Form.Item
@@ -38,11 +38,11 @@ const RegisterPage = () =>{
                             name="fullName"
                             rules={[{ required: true, message: 'Please input your full name!' }]}
                         >
-                            <   Input />
+                            <Input />
                         </Form.Item>
-
                     </Col>
-                </Row>    
+                </Row>
+
                 <Row justify={"center"}>
                     <Col xs={24} md={8}>
                         <Form.Item
@@ -53,9 +53,9 @@ const RegisterPage = () =>{
                             <Input />
                         </Form.Item>
                     </Col>
-                 </Row>    
-                 
-                 <Row justify={"center"}>
+                </Row>
+
+                <Row justify={"center"}>
                     <Col xs={24} md={8}>
                         <Form.Item
                             label="Password"
@@ -65,33 +65,36 @@ const RegisterPage = () =>{
                             <Input.Password />
                         </Form.Item>
                     </Col>
-                </Row>    
+                </Row>
+
                 <Row justify={"center"}>
                     <Col xs={24} md={8}>
                         <Form.Item
-                        label="Phone Number"
-                        name="phone"
-                        rules={[{
-                            required: true,
-                            pattern: new RegExp(/\d+/g),
-                            message: "Wrong format!"
-                        }]}
+                            label="Phone Number"
+                            name="phone"
+                            rules={[{
+                                required: true,
+                                pattern: new RegExp(/\d+/g),
+                                message: "Wrong format!"
+                            }]}
                         >
                             <Input />
                         </Form.Item>
                     </Col>
-
                 </Row>
-                    
-                    <Row justify={"center"}>
-                      <Col xs={24} md={8}>
-                          <div>
-                            <Button type="primary" onClick={() => form.submit()}>Register</Button>
-                            </div>
-                      </Col>
-                    </Row>
+
+                <Row justify={"center"}>
+                    <Col xs={24} md={8}>
+                        <div>
+                            <Button type="primary" onClick={() => form.submit()}>
+                                Register
+                            </Button>
+                        </div>
+                        <Divider />
+                        <span>Already have an account? </span><Link to="/login">Login now!</Link>
+                    </Col>
+                </Row>
             </Form>
-            
         </>
     )
 }
