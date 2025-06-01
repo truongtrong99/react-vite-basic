@@ -1,15 +1,26 @@
-import React from 'react';
-import { Button, Checkbox, Col, Divider, Form, Input, Row } from 'antd';
-import { Link } from 'react-router-dom';
+import { Button, Col, Divider, Form, Input, message, notification, Row } from 'antd';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRightOutlined } from '@ant-design/icons';
+import { loginAPI } from '../services/api.service';
+import { useState } from 'react';
 
 const LoginPage = () => {
     const [form] = Form.useForm();
-    
-    const onFinish = (values) => {
-        console.log('Login Form Values:', values);
-        // Here you would typically handle the login logic, e.g., calling an API
-        // and redirecting the user upon successful login.
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+    const onFinish = async (values) => {
+        setLoading(true);
+        const res = await loginAPI(values.email, values.password);
+        if (res && res.data) {
+            message.success('Login successful!');
+            navigate('/');
+        } else {
+            notification.error({
+                message: 'Login Failed',
+                description: JSON.stringify(res.message),
+            });
+        }
+        setLoading(false);
     };
 
     return (
@@ -49,8 +60,8 @@ const LoginPage = () => {
 
                             <Form.Item>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <Button type="primary" htmlType="submit" onClick={() => form.submit()}>
-                                        Submit
+                                    <Button type="primary" loading={loading} onClick={() => form.submit()}>
+                                        Login
                                     </Button>
                                     <Link to="/">
                                         Go to Homepage <ArrowRightOutlined />
