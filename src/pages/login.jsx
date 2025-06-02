@@ -59,7 +59,9 @@ const LoginPage = () => {
                                 name="password"
                                 rules={[{ required: true, message: 'Please input your password!' }]}
                             >
-                                <Input.Password />
+                                <Input.Password 
+                                    onKeyDown={(event) => event.key === 'Enter' && form.submit()}
+                                />
                             </Form.Item>
 
                             <Form.Item>

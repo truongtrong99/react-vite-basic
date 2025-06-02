@@ -8,9 +8,6 @@ const Header = () => {
   const [current, setCurrent] = useState('');
 
   const { user } = useContext(AuthContext);
-
-  console.log('user', user);
-  
   const items = [
     {
       label: <Link to={"/"}>Home</Link>,
@@ -48,7 +45,6 @@ const Header = () => {
   ];
 
   const onClick = e => {
-    console.log('click ', e);
     setCurrent(e.key);
   };
 
