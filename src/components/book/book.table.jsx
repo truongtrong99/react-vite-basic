@@ -1,10 +1,14 @@
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Popconfirm, Table } from "antd";
+import { Drawer, Popconfirm, Table } from "antd";
+import { useState } from "react";
+import BookDetail from "./book.detail";
 
 
 const BookTable = (props) => {
   const { dataBooks, current, setCurrent, pageSize, setPageSize, total, loadDataBooks } = props;
-  
+  const [dataDetail, setDataDetail] = useState(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+
   const onChange = (pagination, filters, sorter, extra) => {  
     if(pagination && pagination.current){
       if(+pagination.current !== +current){
@@ -29,8 +33,8 @@ const BookTable = (props) => {
     render: (_, record) =>{
       return (
         <a href='#' onClick={() => {
-          // setDataDetail(record);
-          // setIsDetailOpen(true);
+          setDataDetail(record);
+          setIsDetailOpen(true);
         }}>{record._id}</a>
       )
     },
@@ -83,6 +87,7 @@ const BookTable = (props) => {
   },
 ];
   return (
+   <>
     <Table dataSource={dataBooks} columns={columns}  
       rowKey="_id"
       pagination= {{
@@ -95,6 +100,12 @@ const BookTable = (props) => {
       }}
       onChange={onChange}
     />
+     <BookDetail 
+        dataDetail={dataDetail} 
+        setDataDetail={setDataDetail} 
+        isDetailOpen={isDetailOpen} 
+        setIsDetailOpen={setIsDetailOpen} />
+   </>
   );
 };
 
