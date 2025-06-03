@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import BookTable from "../components/book/book.table";
 import { fetchDataBooks } from "../services/book.api.service";
 
@@ -8,12 +8,11 @@ const BookPage = () =>{
     const [current, setCurrent] = useState(1);
     const [pageSize, setPageSize] = useState(5);
     const [total, setTotal] = useState(0);
+    const [loadingTable, setLoadingTable] = useState(false);
 
-    useEffect(() => {
-        loadDataBooks();
-    }, [current, pageSize]);
-
-    const loadDataBooks = async () => {
+    
+    const loadDataBooks = useCallback(async () => {
+        setLoadingTable(true);
         const res = await fetchDataBooks(current, pageSize);
         if(res && res.data){
             setDataBooks(res.data.result);
@@ -21,7 +20,13 @@ const BookPage = () =>{
             setPageSize(res.data.meta.pageSize);
             setTotal(res.data.meta.total);
         }
-    }
+        setLoadingTable(false);
+    }, [current, pageSize]);
+    
+    useEffect(() => {
+        loadDataBooks();
+    }, [loadDataBooks]);
+
     return (
         <>  
             <div style={{padding: '20px'}}>
@@ -32,6 +37,7 @@ const BookPage = () =>{
                     setPageSize={setPageSize}
                     total={total}
                     loadDataBooks={loadDataBooks}
+                    loadingTable={loadingTable}
                 ></BookTable>
             </div>
         </>

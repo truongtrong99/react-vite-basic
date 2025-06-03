@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, message } from 'antd';
 import {
   BookOutlined,
@@ -8,7 +8,7 @@ import {
   LoginOutlined,
   AliwangwangOutlined
 } from '@ant-design/icons';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 import { logoutAPI } from '../../services/api.service';
 
@@ -17,7 +17,18 @@ const Header = () => {
 
   const { user, setUser } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const location = useLocation();
+  useEffect(() => {
+    if(location && location.pathname){
+      const allRoutes = [ 'users', 'books'];
+      const currentRoute = allRoutes.find(item => `/${item}` === location.pathname);
+      if(currentRoute){
+        setCurrent(currentRoute);
+      } else {
+        setCurrent('home');
+      }
+    }
+  }, [location]);
   const handleLogout = async () => {
     // Perform logout logic here
     const res = await logoutAPI();

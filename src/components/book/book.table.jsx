@@ -29,6 +29,7 @@ const BookTable = (props) => {
     setPageSize,
     total,
     loadDataBooks,
+    loadingTable
   } = props;
   
   const [dataDetail, setDataDetail] = useState(null);
@@ -178,6 +179,7 @@ const BookTable = (props) => {
           },
         }}
         onChange={onChange}
+        loading={loadingTable}
       />
 
       <BookDetail
