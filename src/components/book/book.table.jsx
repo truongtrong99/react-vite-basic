@@ -17,6 +17,7 @@ import { handleUploadFile } from "../../services/api.service";
 import { createBookAPI } from "../../services/book.api.service";
 import CreateBookControl from "./create.book.control";
 import CreateBookUncontrol from "./create.book.uncontrol";
+import UpdateBookControl from "./update.book.control";
 
 const BookTable = (props) => {
   const {
@@ -31,7 +32,8 @@ const BookTable = (props) => {
   const [dataDetail, setDataDetail] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+const [dataUpdate, setDataUpdate] = useState(null);
   const onChange = (pagination, filters, sorter, extra) => {
     if (pagination && pagination.current) {
       if (+pagination.current !== +current) {
@@ -103,8 +105,8 @@ const BookTable = (props) => {
         <div style={{ display: "flex", gap: "20px" }}>
           <EditOutlined
             onClick={() => {
-              // setDataUpdate(record);
-              // setIsModalUpdateOpen(true);
+              setDataUpdate(record);
+              setIsModalUpdateOpen(true);
             }}
             style={{ cursor: "pointer", color: "orange" }}
           />
@@ -170,6 +172,7 @@ const BookTable = (props) => {
 
       {/* <CreateBookControl  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} /> */}
       <CreateBookUncontrol isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} />
+      <UpdateBookControl isModalUpdateOpen={isModalUpdateOpen} setIsModalUpdateOpen={setIsModalUpdateOpen} loadDataBooks={loadDataBooks} dataUpdate={dataUpdate} setDataUpdate={setDataUpdate} />
     </>
   );
 };
