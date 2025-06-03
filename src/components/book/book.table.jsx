@@ -14,7 +14,7 @@ import {
 import { useState } from "react";
 import BookDetail from "./book.detail";
 import { handleUploadFile } from "../../services/api.service";
-import { createBookAPI } from "../../services/book.api.service";
+import { createBookAPI, deleteBookAPI } from "../../services/book.api.service";
 import CreateBookControl from "./create.book.control";
 import CreateBookUncontrol from "./create.book.uncontrol";
 import UpdateBookControl from "./update.book.control";
@@ -30,11 +30,13 @@ const BookTable = (props) => {
     total,
     loadDataBooks,
   } = props;
+  
   const [dataDetail, setDataDetail] = useState(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
-const [dataUpdate, setDataUpdate] = useState(null);
+  const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+  const [dataUpdate, setDataUpdate] = useState(null);
+
   const onChange = (pagination, filters, sorter, extra) => {
     if (pagination && pagination.current) {
       if (+pagination.current !== +current) {
@@ -46,6 +48,22 @@ const [dataUpdate, setDataUpdate] = useState(null);
       if (+pagination.pageSize !== +pageSize) {
         setPageSize(+pagination.pageSize);
       }
+    }
+  };
+
+  const handleDeleteBook = async (_id) => {
+    const res = await deleteBookAPI(_id);
+    if (res.data) {
+      notification.success({
+        message: "Delete Book",
+        description: "Book deleted successfully!",
+      });
+      await loadDataBooks();
+    } else {
+      notification.error({
+        message: "Error Delete Book",
+        description: JSON.stringify(res.message),
+      });
     }
   };
 
@@ -111,11 +129,10 @@ const [dataUpdate, setDataUpdate] = useState(null);
             }}
             style={{ cursor: "pointer", color: "orange" }}
           />
-
           <Popconfirm
-            title="Delete the user"
-            description="Are you sure to delete this user?"
-            // onConfirm={() => handleDeleteUser(record._id)}
+            title="Delete the book"
+            description="Are you sure to delete this book?"
+            onConfirm={() => handleDeleteBook(record._id)}
             okText="Yes"
             cancelText="No"
             placement="left"
@@ -127,7 +144,6 @@ const [dataUpdate, setDataUpdate] = useState(null);
     },
   ];
 
- 
   return (
     <>
       <div
@@ -171,10 +187,20 @@ const [dataUpdate, setDataUpdate] = useState(null);
         setIsDetailOpen={setIsDetailOpen}
       />
 
-      {/* <CreateBookControl  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} /> */}
-      <CreateBookUncontrol isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} />
+      {/* <CreateBookControl isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} /> */}
+      <CreateBookUncontrol
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        loadDataBooks={loadDataBooks}
+      />
       {/* <UpdateBookControl isModalUpdateOpen={isModalUpdateOpen} setIsModalUpdateOpen={setIsModalUpdateOpen} loadDataBooks={loadDataBooks} dataUpdate={dataUpdate} setDataUpdate={setDataUpdate} /> */}
-      <UpdateBookUncontrol isModalUpdateOpen={isModalUpdateOpen} setIsModalUpdateOpen={setIsModalUpdateOpen} loadDataBooks={loadDataBooks} dataUpdate={dataUpdate} setDataUpdate={setDataUpdate} />
+      <UpdateBookUncontrol
+        isModalUpdateOpen={isModalUpdateOpen}
+        setIsModalUpdateOpen={setIsModalUpdateOpen}
+        loadDataBooks={loadDataBooks}
+        dataUpdate={dataUpdate}
+        setDataUpdate={setDataUpdate}
+      />
     </>
   );
 };
