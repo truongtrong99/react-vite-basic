@@ -1,31 +1,27 @@
-import { Button, Input, InputNumber, message, Modal, notification, Select } from "antd";
-import { createBookAPI, updateBookAPI } from "../../services/book.api.service";
-import { handleUploadFile } from "../../services/api.service";
+import { Form, Input, InputNumber, message, Modal, notification, Select } from "antd";
 import { useEffect, useState } from "react";
+import { handleUploadFile } from "../../services/api.service";
+import { updateBookAPI } from "../../services/book.api.service";
 
-const UpdateBookControl = (props) => {
+
+const UpdateBookUncontrol = (props) => {
     const { isModalUpdateOpen, setIsModalUpdateOpen, loadDataBooks, dataUpdate, setDataUpdate } = props;
-    const [mainText, setMainText] = useState("");
-    const [author, setAuthor] = useState("");
-    const [price, setPrice] = useState("");
-    const [quantity, setQuantity] = useState("");
-    const [category, setCategory] = useState("");
+    const [form] = Form.useForm();
     const [selectedFile, setSelectedFile] = useState(null);
     const [preview, setPreview] = useState(null);
-    const [id, setId] = useState("");
-
     useEffect(() => {
-        if (dataUpdate) {
-            setId(dataUpdate._id);
-            setMainText(dataUpdate.mainText);
-            setAuthor(dataUpdate.author);
-            setPrice(dataUpdate.price);
-            setQuantity(dataUpdate.quantity);
-            setCategory(dataUpdate.category);
-            setSelectedFile(null);
-            setPreview(`${import.meta.env.VITE_BACKEND_URL}/images/book/${dataUpdate.thumbnail}`);
-        }
-    }, [dataUpdate]);
+            if (dataUpdate && dataUpdate._id) {
+                form.setFieldsValue({
+                    _id: dataUpdate._id,
+                    mainText: dataUpdate.mainText,
+                    author: dataUpdate.author,
+                    price: dataUpdate.price,
+                    quantity: dataUpdate.quantity,
+                    category: dataUpdate.category,
+                });
+                setPreview(`${import.meta.env.VITE_BACKEND_URL}/images/book/${dataUpdate.thumbnail}`);
+            }
+        }, [dataUpdate]);
 
     const handleOnChangeFile = (event) => {
         if (!event.target.files || event.target.files.length === 0) {
@@ -43,17 +39,13 @@ const UpdateBookControl = (props) => {
 
     const resetAndCloseModal = () => {
         setIsModalUpdateOpen(false);
-        setMainText("");
-        setAuthor("");
-        setPrice("");
-        setQuantity("");
-        setCategory("");
+        form.resetFields();
         setSelectedFile(null);
         setPreview(null);
         setDataUpdate(null);
     };
 
-    const handleUpdateBook = async () => {
+    const handleUpdateBook = async (values) => {
         let thumbnail = null;
 
         if (!selectedFile && !preview) {
@@ -78,8 +70,9 @@ const UpdateBookControl = (props) => {
             }
         }
 
+        const { _id, mainText, author, price, quantity, category } = values;
         const resUpdateBook = await updateBookAPI(
-            id,
+            _id,
             mainText,
             author,
             price,
@@ -104,55 +97,83 @@ const UpdateBookControl = (props) => {
     };
 
     return (
-        <Modal
-            title="Update Book"
-            open={isModalUpdateOpen}
-            onCancel={() => resetAndCloseModal()}
-            onOk={handleUpdateBook}
-            okText="Update"
-        >
-            <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
-                <div>
-                    <span>Id</span>
-                    <Input value={id} disabled />
-                </div>
-                <div>
-                    <span>Title</span>
-                    <Input
-                        value={mainText}
-                        onChange={(event) => setMainText(event.target.value)}
-                    />
-                </div>
-                <div>
-                    <span>Author</span>
-                    <Input
-                        value={author}
-                        onChange={(event) => setAuthor(event.target.value)}
-                    />
-                </div>
-                <div>
-                    <span>Price</span>
+          <>
+         <Modal
+                title="Update Book"
+                open={isModalUpdateOpen}
+                onCancel={() => resetAndCloseModal()}
+                onOk={() => form.submit()}
+                okText="Update"
+            >
+                 <Form
+                form={form}
+                name="basic"
+                layout="vertical"
+                onFinish={handleUpdateBook}
+            >
+                <Form.Item 
+                    label="ID"
+                    name="_id"
+                    rules={[
+                        { required: true, message: 'Please input your ID!' }
+                    ]}>
+                    <Input disabled />
+                </Form.Item>
+                
+                <Form.Item
+                    label="Title"
+                    name="mainText"
+                    rules={[
+                        { required: true, message: 'Please input your title!' }
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Author"
+                    name="author"
+                    rules={[
+                        { required: true, message: 'Please input your author!' },
+                    ]}
+                >
+                    <Input />
+                </Form.Item>
+
+                <Form.Item
+                    label="Price"
+                    name="price"
+                    rules={[
+                        { required: true, message: 'Please input your price!' },
+                    ]}
+                >
                     <InputNumber
-                        value={price}
-                        onChange={(value) => setPrice(value)}
                         addonAfter="đ"
                         style={{ width: "100%" }}
                     />
-                </div>
-                <div>
-                    <span>Quantity</span>
+                </Form.Item>
+
+                <Form.Item
+                    label="Quantity"
+                    name="quantity"
+                    rules={[
+                        { required: true, message: 'Please input your quantity!' },
+                    ]}
+                >
                     <InputNumber
-                        value={quantity}
-                        onChange={(value) => setQuantity(value)}
                         style={{ width: "100%" }}
                     />
-                </div>
-                <div>
-                    <span>Category</span>
+                </Form.Item>
+
+                <Form.Item
+                    label="Category"
+                    name="category"
+                    rules={[
+                        { required: true, message: 'Please input your category!' },
+                    ]}
+                >
                     <Select
                         style={{ width: "100%" }}
-                        value={category}
-                        onChange={(value) => setCategory(value)}
                         options={[
                             { value: "Arts", label: "Arts" },
                             { value: "Business", label: "Business" },
@@ -166,7 +187,8 @@ const UpdateBookControl = (props) => {
                             { value: "Travel", label: "Travel" },
                         ]}
                     />
-                </div>
+                </Form.Item>
+
                 <div>
                     <label
                         htmlFor="btnUpload"
@@ -191,8 +213,10 @@ const UpdateBookControl = (props) => {
                         onClick={(event) => {
                             event.target.value = null;
                         }}
+                        style={{ display: "none" }}
                     />
                 </div>
+
                 {preview && (
                     <div
                         style={{
@@ -209,9 +233,11 @@ const UpdateBookControl = (props) => {
                         />
                     </div>
                 )}
-            </div>
-        </Modal>
-    );
-};
+            </Form>
+            </Modal>
+           
+        </>
+      )
+}
 
-export default UpdateBookControl;
+export default UpdateBookUncontrol;

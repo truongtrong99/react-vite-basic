@@ -18,6 +18,7 @@ import { createBookAPI } from "../../services/book.api.service";
 import CreateBookControl from "./create.book.control";
 import CreateBookUncontrol from "./create.book.uncontrol";
 import UpdateBookControl from "./update.book.control";
+import UpdateBookUncontrol from "./update.book.uncontrol";
 
 const BookTable = (props) => {
   const {
@@ -172,7 +173,8 @@ const [dataUpdate, setDataUpdate] = useState(null);
 
       {/* <CreateBookControl  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} /> */}
       <CreateBookUncontrol isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} />
-      <UpdateBookControl isModalUpdateOpen={isModalUpdateOpen} setIsModalUpdateOpen={setIsModalUpdateOpen} loadDataBooks={loadDataBooks} dataUpdate={dataUpdate} setDataUpdate={setDataUpdate} />
+      {/* <UpdateBookControl isModalUpdateOpen={isModalUpdateOpen} setIsModalUpdateOpen={setIsModalUpdateOpen} loadDataBooks={loadDataBooks} dataUpdate={dataUpdate} setDataUpdate={setDataUpdate} /> */}
+      <UpdateBookUncontrol isModalUpdateOpen={isModalUpdateOpen} setIsModalUpdateOpen={setIsModalUpdateOpen} loadDataBooks={loadDataBooks} dataUpdate={dataUpdate} setDataUpdate={setDataUpdate} />
     </>
   );
 };
