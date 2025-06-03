@@ -16,6 +16,7 @@ import BookDetail from "./book.detail";
 import { handleUploadFile } from "../../services/api.service";
 import { createBookAPI } from "../../services/book.api.service";
 import CreateBookControl from "./create.book.control";
+import CreateBookUncontrol from "./create.book.uncontrol";
 
 const BookTable = (props) => {
   const {
@@ -167,7 +168,8 @@ const BookTable = (props) => {
         setIsDetailOpen={setIsDetailOpen}
       />
 
-      <CreateBookControl  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} />
+      {/* <CreateBookControl  isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} /> */}
+      <CreateBookUncontrol isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} loadDataBooks={loadDataBooks} />
     </>
   );
 };
