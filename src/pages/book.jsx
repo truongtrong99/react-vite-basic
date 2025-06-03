@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import BookTable from "../components/book/book.table";
 import { fetchDataBooks } from "../services/book.api.service";
-import BookForm from "../components/book/book.form";
 
 
 const BookPage = () =>{
@@ -26,7 +25,6 @@ const BookPage = () =>{
     return (
         <>  
             <div style={{padding: '20px'}}>
-                <BookForm />
                 <BookTable dataBooks={dataBooks} 
                     current={current} 
                     setCurrent={setCurrent} 
